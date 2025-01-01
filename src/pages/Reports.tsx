@@ -1,35 +1,28 @@
 import { AdminLayout } from "@/components/layout/AdminLayout";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-const reports = [
+const mockReports = [
   {
     id: 1,
-    reportedBy: "Alice Cooper",
-    reportedUser: "Bob Dylan",
+    reportedBy: "John Doe",
+    reportedUser: "Alice Smith",
     reason: "Inappropriate behavior in comments",
-    status: "under_review",
+    status: "pending",
   },
   {
     id: 2,
-    reportedBy: "Charlie Brown",
-    reportedUser: "David Smith",
+    reportedBy: "Jane Smith",
+    reportedUser: "Bob Johnson",
     reason: "Spam in discussion forum",
-    status: "resolved",
+    status: "under-review",
   },
   {
     id: 3,
-    reportedBy: "Eve Johnson",
-    reportedUser: "Frank Miller",
-    reason: "Fake profile information",
-    status: "pending",
+    reportedBy: "Mike Johnson",
+    reportedUser: "Carol Williams",
+    reason: "Fake profile",
+    status: "resolved",
   },
 ];
 
@@ -37,7 +30,7 @@ const getStatusColor = (status: string) => {
   switch (status) {
     case "pending":
       return "bg-yellow-500";
-    case "under_review":
+    case "under-review":
       return "bg-blue-500";
     case "resolved":
       return "bg-green-500";
@@ -57,30 +50,25 @@ export default function Reports() {
           </p>
         </div>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Reported By</TableHead>
-              <TableHead>Reported User</TableHead>
-              <TableHead>Reason</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {reports.map((report) => (
-              <TableRow key={report.id}>
-                <TableCell>{report.reportedBy}</TableCell>
-                <TableCell>{report.reportedUser}</TableCell>
-                <TableCell>{report.reason}</TableCell>
-                <TableCell>
-                  <Badge className={getStatusColor(report.status)}>
-                    {report.status.replace("_", " ").toUpperCase()}
-                  </Badge>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <div className="grid gap-4">
+          {mockReports.map((report) => (
+            <Card key={report.id} className="p-6">
+              <div className="flex justify-between items-start">
+                <div className="space-y-2">
+                  <div className="flex gap-2 items-center">
+                    <h3 className="font-semibold">{report.reportedBy}</h3>
+                    <span className="text-muted-foreground">reported</span>
+                    <h3 className="font-semibold">{report.reportedUser}</h3>
+                  </div>
+                  <p className="text-sm">{report.reason}</p>
+                </div>
+                <Badge className={getStatusColor(report.status)}>
+                  {report.status}
+                </Badge>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
     </AdminLayout>
   );

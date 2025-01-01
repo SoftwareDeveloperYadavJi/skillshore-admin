@@ -1,15 +1,8 @@
 import { AdminLayout } from "@/components/layout/AdminLayout";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-const queries = [
+const mockQueries = [
   {
     id: 1,
     name: "John Doe",
@@ -21,14 +14,14 @@ const queries = [
     id: 2,
     name: "Jane Smith",
     email: "jane@example.com",
-    message: "Certificate not generated",
-    status: "in_progress",
+    message: "Technical issue with video playback",
+    status: "in-progress",
   },
   {
     id: 3,
     name: "Mike Johnson",
     email: "mike@example.com",
-    message: "Payment issue",
+    message: "Certificate not generated",
     status: "resolved",
   },
 ];
@@ -37,7 +30,7 @@ const getStatusColor = (status: string) => {
   switch (status) {
     case "pending":
       return "bg-yellow-500";
-    case "in_progress":
+    case "in-progress":
       return "bg-blue-500";
     case "resolved":
       return "bg-green-500";
@@ -57,30 +50,22 @@ export default function Queries() {
           </p>
         </div>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Message</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {queries.map((query) => (
-              <TableRow key={query.id}>
-                <TableCell>{query.name}</TableCell>
-                <TableCell>{query.email}</TableCell>
-                <TableCell>{query.message}</TableCell>
-                <TableCell>
-                  <Badge className={getStatusColor(query.status)}>
-                    {query.status.replace("_", " ").toUpperCase()}
-                  </Badge>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <div className="grid gap-4">
+          {mockQueries.map((query) => (
+            <Card key={query.id} className="p-6">
+              <div className="flex justify-between items-start">
+                <div className="space-y-2">
+                  <h3 className="font-semibold">{query.name}</h3>
+                  <p className="text-sm text-muted-foreground">{query.email}</p>
+                  <p className="text-sm">{query.message}</p>
+                </div>
+                <Badge className={getStatusColor(query.status)}>
+                  {query.status}
+                </Badge>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
     </AdminLayout>
   );
