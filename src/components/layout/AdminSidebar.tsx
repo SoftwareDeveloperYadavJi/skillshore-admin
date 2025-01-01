@@ -19,7 +19,6 @@ const menuItems = [
   { title: "Dashboard", icon: LayoutDashboard, path: "/" },
   { title: "User Queries", icon: MessageSquare, path: "/queries" },
   { title: "User Reports", icon: Flag, path: "/reports" },
-  { title: "Admins", icon: Users, path: "/admins" },
 ];
 
 export function AdminSidebar() {
@@ -40,7 +39,7 @@ export function AdminSidebar() {
       <SidebarHeader className="flex items-center gap-2 px-4 py-2">
         <Bell className="h-6 w-6 text-primary" />
         <span className="font-bold text-xl">Admin Portal</span>
-        <SidebarTrigger className="ml-auto" />
+        
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
