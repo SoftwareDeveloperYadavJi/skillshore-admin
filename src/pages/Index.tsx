@@ -1,6 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { MessageSquare, Flag, CheckCircle, AlertCircle } from "lucide-react";
+import { useTheme } from "@/components/ThemeProvider";
+import { Button } from "@/components/ui/button";
+import { Moon, Sun } from "lucide-react";
 
 const stats = [
   {
@@ -30,14 +33,29 @@ const stats = [
 ];
 
 export default function Index() {
+  const { theme, setTheme } = useTheme();
+
   return (
     <AdminLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Overview of your platform's activity and metrics
-          </p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+            <p className="text-muted-foreground">
+              Overview of your platform's activity and metrics
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? (
+              <Sun className="h-[1.2rem] w-[1.2rem]" />
+            ) : (
+              <Moon className="h-[1.2rem] w-[1.2rem]" />
+            )}
+          </Button>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

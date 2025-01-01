@@ -1,8 +1,27 @@
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState } from "react";
+import { toast } from "@/components/ui/use-toast";
 
-const mockReports = [
+type Status = "pending" | "under-review" | "resolved";
+
+type Report = {
+  id: number;
+  reportedBy: string;
+  reportedUser: string;
+  reason: string;
+  status: Status;
+};
+
+const mockReports: Report[] = [
   {
     id: 1,
     reportedBy: "John Doe",
@@ -26,7 +45,7 @@ const mockReports = [
   },
 ];
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: Status) => {
   switch (status) {
     case "pending":
       return "bg-yellow-500";
@@ -40,18 +59,30 @@ const getStatusColor = (status: string) => {
 };
 
 export default function Reports() {
+  const [reports, setReports] = useState<Report[]>(mockReports);
+
+  const handleStatusChange = (reportId: number, newStatus: Status) => {
+    setReports((prevReports) =>
+      prevReports.map((report) =>
+        report.id === reportId ? { ...report, status: newStatus } : report
+      )
+    );
+    toast({
+      title: "Status Updated",
+      description: `Report status has been updated to ${newStatus}`,
+    });
+  };
+
   return (
     <AdminLayout>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">User Reports</h1>
-          <p className="text-muted-foreground">
-            Review and manage user reports
-          </p>
+          <p className="text-muted-foreground">Review and manage user reports</p>
         </div>
 
         <div className="grid gap-4">
-          {mockReports.map((report) => (
+          {reports.map((report) => (
             <Card key={report.id} className="p-6">
               <div className="flex justify-between items-start">
                 <div className="space-y-2">
@@ -62,9 +93,26 @@ export default function Reports() {
                   </div>
                   <p className="text-sm">{report.reason}</p>
                 </div>
-                <Badge className={getStatusColor(report.status)}>
-                  {report.status}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Select
+                    value={report.status}
+                    onValueChange={(value: Status) =>
+                      handleStatusChange(report.id, value)
+                    }
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="under-review">Under Review</SelectItem>
+                      <SelectItem value="resolved">Resolved</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Badge className={getStatusColor(report.status)}>
+                    {report.status}
+                  </Badge>
+                </div>
               </div>
             </Card>
           ))}

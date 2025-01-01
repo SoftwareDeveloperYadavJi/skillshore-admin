@@ -1,5 +1,5 @@
-import { LayoutDashboard, MessageSquare, Flag, Users, Bell } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { LayoutDashboard, MessageSquare, Flag, Users, Bell, LogOut } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -12,6 +12,8 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 
 const menuItems = [
   { title: "Dashboard", icon: LayoutDashboard, path: "/" },
@@ -21,6 +23,18 @@ const menuItems = [
 ];
 
 export function AdminSidebar() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    // Add any logout logic here
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out",
+    });
+    navigate("/login");
+  };
+
   return (
     <Sidebar>
       <SidebarHeader className="flex items-center gap-2 px-4 py-2">
@@ -40,7 +54,9 @@ export function AdminSidebar() {
                       to={item.path}
                       className={({ isActive }) =>
                         `flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
-                          isActive ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+                          isActive
+                            ? "bg-primary text-primary-foreground"
+                            : "hover:bg-accent"
                         }`
                       }
                     >
@@ -53,6 +69,16 @@ export function AdminSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <div className="mt-auto p-4">
+          <Button
+            variant="destructive"
+            className="w-full"
+            onClick={handleLogout}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
+        </div>
       </SidebarContent>
     </Sidebar>
   );

@@ -1,8 +1,28 @@
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState } from "react";
+import { toast } from "@/components/ui/use-toast";
 
-const mockQueries = [
+type Status = "pending" | "in-progress" | "resolved";
+
+type Query = {
+  id: number;
+  name: string;
+  email: string;
+  message: string;
+  status: Status;
+};
+
+const mockQueries: Query[] = [
   {
     id: 1,
     name: "John Doe",
@@ -26,7 +46,7 @@ const mockQueries = [
   },
 ];
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: Status) => {
   switch (status) {
     case "pending":
       return "bg-yellow-500";
@@ -40,6 +60,20 @@ const getStatusColor = (status: string) => {
 };
 
 export default function Queries() {
+  const [queries, setQueries] = useState<Query[]>(mockQueries);
+
+  const handleStatusChange = (queryId: number, newStatus: Status) => {
+    setQueries((prevQueries) =>
+      prevQueries.map((query) =>
+        query.id === queryId ? { ...query, status: newStatus } : query
+      )
+    );
+    toast({
+      title: "Status Updated",
+      description: `Query status has been updated to ${newStatus}`,
+    });
+  };
+
   return (
     <AdminLayout>
       <div className="space-y-6">
@@ -51,7 +85,7 @@ export default function Queries() {
         </div>
 
         <div className="grid gap-4">
-          {mockQueries.map((query) => (
+          {queries.map((query) => (
             <Card key={query.id} className="p-6">
               <div className="flex justify-between items-start">
                 <div className="space-y-2">
@@ -59,9 +93,26 @@ export default function Queries() {
                   <p className="text-sm text-muted-foreground">{query.email}</p>
                   <p className="text-sm">{query.message}</p>
                 </div>
-                <Badge className={getStatusColor(query.status)}>
-                  {query.status}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Select
+                    value={query.status}
+                    onValueChange={(value: Status) =>
+                      handleStatusChange(query.id, value)
+                    }
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="in-progress">In Progress</SelectItem>
+                      <SelectItem value="resolved">Resolved</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Badge className={getStatusColor(query.status)}>
+                    {query.status}
+                  </Badge>
+                </div>
               </div>
             </Card>
           ))}
